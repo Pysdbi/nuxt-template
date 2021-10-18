@@ -18,8 +18,7 @@
             <v-app-bar-title>
               <nuxt-link
                 to="/"
-                class="text-h6 text-md-h5 text--primary font-weight-bold d-flex align-center justify-start"
-                style="text-decoration: none"
+                class="text-h6 text-md-h5 text--primary font-weight-bold d-flex align-center justify-start text-decoration-none"
               >
                 {{ title }}
               </nuxt-link>
@@ -37,18 +36,43 @@
               color="primary"
               background-color="transparent"
             >
-              <v-tab
+              <v-menu
                 v-for="(link, i) in appBar.links"
                 :key="i"
-                :to="link.to"
-                router
-                exact
-                link
+                open-on-hover
+                offset-y
+                rounded="b-md t-0"
+                nudge-top="2"
+                nudge-left="2"
               >
-                <span>
-                  {{ link.name }}
-                </span>
-              </v-tab>
+                <template #activator="{ on, attrs }">
+                  <v-tab
+                    :to="link.to"
+                    router
+                    exact
+                    link
+                    v-bind="attrs"
+                    v-on="on"
+                  >
+                    <div>
+                      {{ link.name }}
+                      <v-icon v-if="link.children">
+                        mdi-chevron-down
+                      </v-icon>
+                    </div>
+                  </v-tab>
+                </template>
+
+                <v-list v-if="link.children">
+                  <v-list-item
+                    v-for="(item, index) in link.children"
+                    :key="index"
+                    :to="item.to"
+                  >
+                    <v-list-item-title v-text="item.name" />
+                  </v-list-item>
+                </v-list>
+              </v-menu>
             </v-tabs>
             <v-spacer />
             <a
@@ -76,12 +100,58 @@
       <v-divider />
 
       <v-footer
-        min-height="100"
         color="transparent"
       >
-        <v-container>
-          <v-row>
-            <span>&copy; {{ new Date().getFullYear() }} {{ title }}</span>
+        <v-container
+          :style="{minHeight: appFooter.minHeight}"
+          class="d-flex align-center"
+        >
+          <v-row justify="center">
+            <v-col
+              cols="12"
+              md="4"
+              lg="3"
+              class="text--primary font-weight-bold d-flex justify-center"
+            >
+              {{ title }}
+            </v-col>
+            <v-col
+              cols="12"
+              md="4"
+              lg="3"
+              class="text-center"
+            >
+              <span>&copy; {{ new Date().getFullYear() }} {{ title }}.  Все права сохранены.</span>
+            </v-col>
+            <v-col
+              cols="10"
+              md="6"
+              lg="3"
+              class="d-flex flex-column"
+            >
+              <a
+                class="mb-2 text--primary"
+                :href="contact.phone.link"
+                v-text="contact.phone.title"
+              />
+              <a
+                class="mb-2 text--primary"
+                :href="contact.email.link"
+                v-text="contact.email.title"
+              />
+              <div
+                class="mb-2 text--primary text-body-2"
+                v-html="contact.address.title"
+              />
+              <div
+                class="mb-2 text--primary"
+                v-html="contact.company.name"
+              />
+              <div
+                class="mb-2 text--primary text-body-2"
+                v-html="contact.company.data"
+              />
+            </v-col>
           </v-row>
         </v-container>
       </v-footer>
@@ -92,7 +162,16 @@
 <script lang="ts">
 import Vue from 'vue'
 
-const linksList = [
+interface EnumLinkItem {
+  name: string,
+  to: string,
+  children: Array<EnumLinkItem>
+}
+
+interface EnumLinkItems extends Array<EnumLinkItem> {
+}
+
+const linksList: EnumLinkItems = [
   {
     name: 'Главная',
     to: '/'
@@ -103,11 +182,11 @@ const linksList = [
     children: [
       {
         name: 'Сайты',
-        to: '/'
+        to: '/services/sites'
       },
       {
         name: 'Приложения',
-        to: '/'
+        to: '/services/applications'
       }
     ]
   },
@@ -143,7 +222,23 @@ export default Vue.extend({
       phone: {
         title: '+7 (964) 627 20 25',
         link: 'tel:+79646272025'
+      },
+      email: {
+        title: 'sdup@sdup.ru',
+        link: 'mailto:sdup@sdup.ru'
+      },
+      address: {
+        title: '<b>103274</b>, г. Москва, Краснопресненская Набережная, 2'
+      },
+      company: {
+        name: 'ООО <b>"SDup"</b>',
+        data: 'ОГРН <b>1199944477788</b>, ИНН <b>1111111111</b>'
       }
+    },
+
+    appFooter: {
+      width: 8, // max 12
+      minHeight: '350px'
     }
   })
 })

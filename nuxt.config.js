@@ -1,6 +1,12 @@
 import colors from 'vuetify/es5/util/colors'
 
+const isDev = process.env.NODE_ENV !== 'production'
+
+const hostname = !isDev ? 'https://nuxt-template.com' : 'http://localhost:5000'
+
 export default {
+  globalName: 'nuxt-template',
+
   head: {
     titleTemplate: '%s - nuxt-template',
     title: 'nuxt-template',
@@ -9,43 +15,76 @@ export default {
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { hid: 'description', name: 'description', content: '' },
       { name: 'format-detection', content: 'telephone=no' }
+
+      // Metric
+      // { hid: 'yandex-verification', name: 'yandex-verification', content: 'key' },
+      // { hid: 'google-site-verification', name: 'yandex-verification', content: 'key' }
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
     ]
   },
 
-  // Global CSS: https://go.nuxtjs.dev/config-css
+  rootDir: __dirname,
+
+  // Global CSS
   css: [
   ],
 
-  // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
+  // Plugins to run before rendering page
   plugins: [
+    { src: '@/plugins/aos.client.js' }
   ],
 
-  // Auto import components: https://go.nuxtjs.dev/config-components
+  // Auto import components
   components: true,
 
-  // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
+  // Modules for dev and build (recommended)
   buildModules: [
-    // https://go.nuxtjs.dev/typescript
     '@nuxt/typescript-build',
-    // https://go.nuxtjs.dev/vuetify
     '@nuxtjs/vuetify'
   ],
 
-  // Modules: https://go.nuxtjs.dev/config-modules
+  // Modules
   modules: [
-    // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
-    // https://go.nuxtjs.dev/pwa
-    '@nuxtjs/pwa'
+    '@nuxtjs/pwa',
+    '@nuxtjs/sitemap'
+    // '@nuxtjs/yandex-metrika'
   ],
 
-  // Axios module configuration: https://go.nuxtjs.dev/config-axios
-  axios: {},
+  // Search engines
+  // yandexMetrika: {
+  //   id: '',
+  //   webvisor: true,
+  //   clickmap: true,
+  //   // useCDN:false,
+  //   trackLinks: true,
+  //   accurateTrackBounce: true
+  // },
 
-  // PWA module configuration: https://go.nuxtjs.dev/pwa
+  // Sitemap
+  sitemap: {
+    hostname: '',
+    gzip: true,
+    exclude: []
+  },
+
+  // Google Web Font loader configuration
+  webfontloader: {
+    events: false,
+    google: {
+      families: ['Fira+Sans+Condensed:wght@300;400&display=swap']
+    },
+    timeout: 5000
+  },
+
+  // Axios module configuration
+  axios: {
+    baseURL: `${hostname}/api`
+  },
+
+  // PWA module configuration
   pwa: {
     manifest: {
       lang: 'ru'

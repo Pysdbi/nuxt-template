@@ -16,15 +16,15 @@ export default class BgEffect extends Vue {
   readonly position!: string
 
   // Размер эффекта
-  @Prop({ type: Number, default: 500 })
-  readonly size!: number
+  @Prop({ type: String, default: '500' })
+  readonly size!: string
 
   // Цвет эффекта
   @Prop({ type: String, default: '#aaa' })
   readonly color!: string
 
   // Прозрачность эффекта
-  @Prop({ type: Number, default: 0.2 })
+  @Prop({ type: Number, default: .2 })
   readonly opacity!: number
 
   get bgStyles () {

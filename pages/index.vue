@@ -59,22 +59,43 @@
         </v-col>
       </v-row>
     </v-col>
+
     <v-col class="pa-0">
       <ticker
-        v-if="!$vuetify.breakpoint.mobile"
+        v-if="!$vuetify.breakpoint.smAndDown"
         :items="sponsors.listItems"
         duration="10"
         :repeat-items="7"
       />
+    </v-col>
+
+    <v-col
+      cols="12"
+      :md="sectionOne.width"
+      class="d-flex align-center"
+      :style="sectionOne.styles"
+    >
+      <card-service />
+    </v-col>
+
+    <v-col
+      cols="12"
+      :md="sectionOne.width"
+      class="d-flex align-center"
+      :style="sectionOne.styles"
+    >
+      <h2>Отзывы</h2>
     </v-col>
   </v-row>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
+import { EnumTickerItems } from '~/components/custom/ticker.vue'
 
-import ticker, { EnumTickerItems } from '~/components/custom/ticker.vue'
-import BgEffect from '~/components/custom/bg-effect.vue'
+const ticker = () => import('~/components/custom/ticker.vue')
+const bgEffect = () => import('~/components/custom/bg-effect.vue')
+const cardService = () => import('~/components/custom/card-service.vue')
 
 const sponsorsList: EnumTickerItems = [
   {
@@ -92,9 +113,9 @@ export default Vue.extend({
 
   components: {
     ticker,
-    BgEffect
+    bgEffect,
+    cardService
   },
-
   layout: 'default',
 
   data: () => ({
@@ -117,8 +138,35 @@ export default Vue.extend({
 
     sponsors: {
       listItems: sponsorsList
+    },
+
+    sectionOne: {
+      width: 9, // max 12
+
+      styles: {
+        minHeight: '600px'
+      }
+    },
+
+    sectionReviews: {
+      width: 9, // max 12
+
+      styles: {
+        minHeight: '600px'
+      }
     }
-  })
+  }),
+
+  head: {
+    title: 'Главная',
+    meta: [
+      {
+        hid: 'description',
+        name: 'description',
+        content: ''
+      }
+    ]
+  }
 })
 </script>
 
